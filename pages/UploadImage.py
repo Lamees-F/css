@@ -7,10 +7,9 @@ import os
 import re
 import json
 from datetime import datetime
-import smtplib
-from email.mime.text import MIMEText
-from email.mime.multipart import MIMEMultipart
-st.set_page_config(page_title="FaultGuardAI", layout="centered")
+# import smtplib
+# from email.mime.text import MIMEText
+# from email.mime.multipart import MIMEMultipart
 
 # File path for storing reports
 REPORTS_FILE = "reports.json"
@@ -29,7 +28,7 @@ def save_reports(reports, file_path=REPORTS_FILE):
         json.dump(reports, file, indent=4)
 
 # Function to load the YOLO model
-def load_model(model_path='CSS_Model.pt'):
+def load_model(model_path='../Model/CSS_Model.pt'):
     if not os.path.exists(model_path):
         raise FileNotFoundError(f"Model not found at {os.path.abspath(model_path)}")
     return YOLO(model_path)
@@ -55,24 +54,24 @@ def is_valid_email(email):
     return re.match(r"[^@]+@[^@]+\.[^@]+", email)
 
 # Function to send email
-def send_email(receiver_email, subject, body):
-    sender_email = "FaultGuardAI@hotmail.com"
-    sender_password = "Aa123123@"  # Replace with your actual password
+# def send_email(receiver_email, subject, body):
+#     sender_email = "FaultGuardAI@hotmail.com"
+#     sender_password = "Aa123123@"  # Replace with your actual password
 
-    msg = MIMEMultipart()
-    msg["From"] = sender_email
-    msg["To"] = receiver_email
-    msg["Subject"] = subject
-    msg.attach(MIMEText(body, "plain"))
+#     msg = MIMEMultipart()
+#     msg["From"] = sender_email
+#     msg["To"] = receiver_email
+#     msg["Subject"] = subject
+#     msg.attach(MIMEText(body, "plain"))
 
-    try:
-        with smtplib.SMTP("smtp.office365.com", 587) as server:
-            server.starttls()
-            server.login(sender_email, sender_password)
-            server.send_message(msg)
-        st.success("Email sent successfully!")
-    except Exception as e:
-        st.error(f"Failed to send email: {e}")
+#     try:
+#         with smtplib.SMTP("smtp.office365.com", 587) as server:
+#             server.starttls()
+#             server.login(sender_email, sender_password)
+#             server.send_message(msg)
+#         st.success("Email sent successfully!")
+#     except Exception as e:
+#         st.error(f"Failed to send email: {e}")
 
 # Main app
 def main():
@@ -80,16 +79,9 @@ def main():
 
     # Define class names
     class_names = {
-        0: 'Hardhat',
-              1: 'Mask',
-              2: 'NO-Hardhat',
-              3: 'NO-Mask',
-              4: 'NO-Safety Vest',
-              5: 'Person',
-              6: 'Safety Cone',
-              7: 'Safety Vest',
-              8: 'machinery',
-              9: 'vehicle'
+        0: 'Hardhat', 1: 'Mask', 2: 'NO-Hardhat',
+             3: 'NO-Mask', 4: 'NO-Safety Vest', 5: 'Person', 6: 'Safety Cone',
+             7: 'Safety Vest', 8: 'machinery', 9: 'vehicle'
     }
 
     # Load YOLO model
@@ -170,15 +162,15 @@ def main():
             save_reports(reports)
             st.success("Report saved successfully!")
 
-            # Send email with results
-            subject = "Your Detection Results"
-            body = f"Safety Status: {safety_status}\n\n"
-            body += "Detected Objects:\n" + "\n".join([f"- {class_name}: {count}" for class_name, count in detected_objects.items()])
-            if missing_items:
-                body += f"\n\nMissing Items: {', '.join(missing_items)}"
-            if detected_violations:
-                body += f"\n\nDetected Violations: {', '.join(detected_violations)}"
-            send_email(email, subject, body)
+            # # Send email with results
+            # subject = "Your Detection Results"
+            # body = f"Safety Status: {safety_status}\n\n"
+            # body += "Detected Objects:\n" + "\n".join([f"- {class_name}: {count}" for class_name, count in detected_objects.items()])
+            # if missing_items:
+            #     body += f"\n\nMissing Items: {', '.join(missing_items)}"
+            # if detected_violations:
+            #     body += f"\n\nDetected Violations: {', '.join(detected_violations)}"
+            # send_email(email, subject, body)
         else:
             st.error("No objects detected. Please try another image.")
 
