@@ -1,6 +1,7 @@
 streamlit
 Pillow
 fpdf
+cv2
 opencv-python
 numpy
 ultralytics
