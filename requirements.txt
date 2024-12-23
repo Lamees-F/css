@@ -3,5 +3,6 @@ Pillow
 fpdf
 
 ultralytics
+opencv-python
 opencv-python-headless
 numpy
